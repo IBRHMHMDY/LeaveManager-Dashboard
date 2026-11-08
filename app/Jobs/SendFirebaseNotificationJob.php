@@ -5,25 +5,21 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Models\Device;
+use App\Enums\AppNotificationStatus;
 use App\Models\AppNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Contract\Messaging;
 use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
-use Throwable;
+use Kreait\Firebase\Messaging\Notification;
+use Illuminate\Support\Facades\Log;
 
-final class SendFirebaseNotificationJob implements ShouldQueue
+class SendFirebaseNotificationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public int $tries = 3;
-    public int $timeout = 120; // 2 minutes max for large broadcasts
 
     public function __construct(
         public readonly AppNotification $notification
@@ -31,53 +27,42 @@ final class SendFirebaseNotificationJob implements ShouldQueue
 
     public function handle(Messaging $messaging): void
     {
+        // إذا كان الإشعار قد أُرسل بالفعل، لا تقم بإرساله مرة أخرى
+        if ($this->notification->status === AppNotificationStatus::Completed) {
+            return;
+        }
+
         try {
-            // Fetch devices that have a valid FCM token.
-            // FCM allows a maximum of 500 tokens per multicast message.
-            Device::query()
-                ->whereNotNull('fcm_token')
-                ->where('fcm_token', '!=', '')
-                ->chunk(500, function ($devices) use ($messaging) {
-                    $tokens = $devices->pluck('fcm_token')->toArray();
+            $message = CloudMessage::withTarget('topic', 'all_devices') // أو استخدام FCM Token محدد
+                ->withNotification(Notification::create(
+                    $this->notification->title,
+                    $this->notification->body
+                ))
+                ->withData([
+                    'notification_id' => (string) $this->notification->id,
+                    'type' => $this->notification->type->value, // بناءً على AppNotificationType Enum
+                ]);
 
-                    if (empty($tokens)) {
-                        return;
-                    }
+            $messaging->send($message);
 
-                    $message = CloudMessage::new()
-                        ->withNotification(FirebaseNotification::create(
-                            $this->notification->title,
-                            $this->notification->body
-                        ))
-                        ->withData([
-                            'notification_id' => (string) $this->notification->id,
-                            'type'            => $this->notification->type,
-                            'click_action'    => 'FLUTTER_NOTIFICATION_CLICK',
-                        ]);
-
-                    $report = $messaging->sendMulticast($message, $tokens);
-
-                    // Optional: Log failures to clean up invalid tokens later
-                    if ($report->hasFailures()) {
-                        Log::warning('Firebase notification partial failure', [
-                            'notification_id' => $this->notification->id,
-                            'failed_count'    => $report->failures()->count(),
-                        ]);
-                    }
-                });
-
-            // Mark as sent
-            $this->notification->update(['status' => 'sent']);
-            
-        } catch (Throwable $e) {
-            $this->notification->update(['status' => 'failed']);
-            
-            Log::error('Firebase broadcast completely failed', [
-                'notification_id' => $this->notification->id,
-                'error'           => $e->getMessage(),
+            // تحديث حالة الإشعار إلى مكتمل بنجاح
+            $this->notification->update([
+                'status' => AppNotificationStatus::Completed,
             ]);
 
-            throw $e; // Rethrow to allow Laravel Horizon/Queue to retry
+        } catch (\Exception $e) {
+            Log::error('Firebase Notification Failed', [
+                'notification_id' => $this->notification->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            // تحديث حالة الإشعار إلى فاشل
+            $this->notification->update([
+                'status' => AppNotificationStatus::Failed, // افترضت أن لديك قيمة Failed في الـ Enum
+            ]);
+            
+            // يمكن إعادة رمي الخطأ إذا كنت تريد لـ Queue أن يعيد المحاولة (Retry)
+            // throw $e; 
         }
     }
 }
