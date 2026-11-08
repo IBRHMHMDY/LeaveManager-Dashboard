@@ -4,12 +4,12 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\HolidayResource\Pages;
+namespace App\Filament\Resources\Holidays\Pages;
 
-use App\Filament\Resources\HolidayResource;
+use App\Filament\Resources\Holidays\HolidaysResource;
 use Filament\Resources\Pages\CreateRecord;
 
 final class CreateHoliday extends CreateRecord
 {
-    protected static string $resource = HolidayResource::class;
+    protected static string $resource = HolidaysResource::class;
 }

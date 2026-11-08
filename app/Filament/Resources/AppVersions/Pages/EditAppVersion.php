@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\HolidayResource\Pages;
+namespace App\Filament\Resources\AppVersions\Pages;
 
-use App\Filament\Resources\AppVersionResource;
+use App\Filament\Resources\AppVersions\AppVersionResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 

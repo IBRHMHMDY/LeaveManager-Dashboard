@@ -4,12 +4,13 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Devices;
 
-use App\Filament\Resources\DeviceResource\Pages\ViewDevice;
-use App\Filament\Resources\DeviceResource\Schemas\DeviceForm;
-use App\Filament\Resources\DeviceResource\Tables\DeviceTable;
+
 use App\Filament\Resources\Devices\Pages\ListDevices;
+use App\Filament\Resources\Devices\Pages\ViewDevice;
+use App\Filament\Resources\Devices\Schemas\DeviceForm;
+use App\Filament\Resources\Devices\Tables\DeviceTable;
 use App\Models\Device;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -34,7 +35,7 @@ final class DeviceResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return DeviceTable::make($table);
+        return DeviceTable::table($table);
     }
 
     public static function canCreate(): bool

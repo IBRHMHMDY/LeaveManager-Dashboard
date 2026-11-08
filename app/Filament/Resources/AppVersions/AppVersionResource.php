@@ -1,16 +1,16 @@
 <?php
 
-// app/Filament/Resources/AppVersion.php
+// app/Filament/Resources/Notifications/AppVersions.php
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\AppVersions;
 
-use App\Filament\Resources\AppVersions\AppVersionResource\CreateAppVersion;
+use App\Filament\Resources\AppVersions\Pages\CreateAppVersion;
+use App\Filament\Resources\AppVersions\Pages\EditAppVersion;
 use App\Filament\Resources\AppVersions\Pages\ListAppVersions;
 use App\Filament\Resources\AppVersions\Schemas\AppVersionForm;
 use App\Filament\Resources\AppVersions\Tables\AppVersionTable;
-use App\Filament\Resources\HolidayResource\Pages\EditAppVersion;
 use App\Models\AppVersion;
 use BackedEnum;
 use Filament\Resources\Resource;

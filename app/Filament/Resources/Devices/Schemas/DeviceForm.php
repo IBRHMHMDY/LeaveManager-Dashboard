@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\DeviceResource\Schemas;
+namespace App\Filament\Resources\Devices\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;

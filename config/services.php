@@ -14,7 +14,7 @@ return [
     |
     */
     'firebase' => [
-        'credentials' => env('FIREBASE_CREDENTIALS', storage_path('app/firebase_credentials.json')),
+        'credentials' => env('FIREBASE_CREDENTIALS', storage_path('app/private/firebase_credentials.json')),
     ],
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),

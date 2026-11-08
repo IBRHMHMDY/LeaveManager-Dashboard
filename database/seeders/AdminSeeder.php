@@ -15,15 +15,15 @@ class AdminSeeder extends Seeder
     {
         // إنشاء أو تحديث حساب المدير الوحيد
         User::updateOrCreate(
-            ['email' => 'admin@leavemanager.com'],
+            ['email' => 'ibrhmhmdy@gmail.com'],
             [
                 'name' => 'System Admin',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('Admin@20.30'),
                 'email_verified_at' => now(),
             ]
         );
 
         // حذف أي مستخدمين آخرين لضمان وجود مالك واحد فقط للوحة الإدارة
-        User::where('email', '!=', 'admin@leavemanager.com')->delete();
+        User::where('email', '!=', 'ibrhmhmdy@gmail.com')->delete();
     }
 }

@@ -4,13 +4,14 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Notifications;
 
-use App\Filament\Resources\NotificationResource\Schemas\NotificationForm;
-use App\Filament\Resources\NotificationResource\Tables\NotificationTable;
+
 use App\Filament\Resources\Notifications\Pages\CreateNotification;
 use App\Filament\Resources\Notifications\Pages\EditNotification;
 use App\Filament\Resources\Notifications\Pages\ListNotifications;
+use App\Filament\Resources\Notifications\Schemas\NotificationForm;
+use App\Filament\Resources\Notifications\Tables\NotificationTable;
 use App\Models\AppNotification;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -35,7 +36,7 @@ final class NotificationResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return NotificationTable::make($table);
+        return NotificationTable::configure($table);
     }
 
     public static function getPages(): array

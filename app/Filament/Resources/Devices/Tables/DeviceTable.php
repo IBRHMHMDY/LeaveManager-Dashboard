@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\DeviceResource\Tables;
+namespace App\Filament\Resources\Devices\Tables;
 
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -13,7 +13,7 @@ use Filament\Tables\Table;
 
 final class DeviceTable
 {
-    public static function make(Table $table): Table
+    public static function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -46,7 +46,7 @@ final class DeviceTable
                         'ios' => 'iOS',
                     ]),
             ])
-            ->actionsRecord([
+            ->recordActions([
                 ViewAction::make(),
             ])
             ->defaultSort('last_active_at', 'desc')

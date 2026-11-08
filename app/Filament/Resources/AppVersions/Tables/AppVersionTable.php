@@ -38,10 +38,10 @@ final class AppVersionTable
                     ->label('Maintenance')
                     ->boolean(),
             ])
-            ->actionsRecord([
+            ->recordActions([
                 EditAction::make(),
             ])
-            ->bulkActionsRecord([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

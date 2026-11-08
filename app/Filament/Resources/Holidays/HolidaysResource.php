@@ -1,16 +1,16 @@
 <?php
 
-// app/Filament/Resources/HolidayResource.php
+// app/Filament/Resources/HolidaysResource.php
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Holidays;
 
-use App\Filament\Resources\HolidayResource\Pages\CreateHoliday;
-use App\Filament\Resources\HolidayResource\Pages\EditHoliday;
-use App\Filament\Resources\HolidayResource\Pages\ListHolidays;
-use App\Filament\Resources\HolidayResource\Schemas\HolidayForm;
-use App\Filament\Resources\HolidayResource\Tables\HolidayTable;
+use App\Filament\Resources\Holidays\Pages\CreateHoliday;
+use App\Filament\Resources\Holidays\Pages\EditHoliday;
+use App\Filament\Resources\Holidays\Pages\ListHolidays;
+use App\Filament\Resources\Holidays\Schemas\HolidayForm;
+use App\Filament\Resources\Holidays\Tables\HolidayTable;
 use App\Models\Holiday;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -18,7 +18,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use UnitEnum;
 
-final class HolidayResource extends Resource
+final class HolidaysResource extends Resource
 {
     protected static ?string $model = Holiday::class;
 
@@ -35,7 +35,7 @@ final class HolidayResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return HolidayTable::make($table);
+        return HolidayTable::table($table);
     }
 
     public static function getPages(): array

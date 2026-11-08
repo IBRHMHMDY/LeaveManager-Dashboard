@@ -48,11 +48,11 @@ final class HolidayTable
             ->filters([
                 //
             ])
-            ->actionsRecord([
+            ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

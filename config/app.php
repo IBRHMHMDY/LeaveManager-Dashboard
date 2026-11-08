@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'LeaveManagerDashboard'),
+    'name' => env('APP_NAME', 'LeaveManagerCPanel'),
 
     /*
     |--------------------------------------------------------------------------

@@ -1,11 +1,13 @@
 <?php
 
-// app/Filament/Resources/NotificationResource/Schemas/NotificationForm.php
+// app/Filament/Resources/Notifications/Schemas/NotificationForm.php
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\NotificationResource\Schemas;
+namespace App\Filament\Resources\Notifications\Schemas;
 
+use App\Enums\AppNotificationStatus;
+use App\Enums\AppNotificationType;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -35,23 +37,25 @@ final class NotificationForm
                     Select::make('type')
                         ->label('Send Type')
                         ->options([
-                            'instant' => 'Send Instantly',
-                            'scheduled' => 'Schedule for Later',
-                            'update' => 'App Update Alert',
+                            // إضافة ->value لحل المشكلة
+                            AppNotificationType::Immediate->value => 'Send Instantly',
+                            AppNotificationType::Scheduled->value => 'Schedule for Later',
+                            AppNotificationType::UpdateAlert->value => 'Update Alert',
                         ])
                         ->required()
-                        ->live(), // To toggle scheduled_at visibility
+                        ->live(),
 
                     Select::make('status')
                         ->label('Status')
                         ->options([
-                            'pending' => 'Pending',
-                            'sent' => 'Sent',
-                            'failed' => 'Failed',
+                            AppNotificationStatus::Pending->value => 'Pending',
+                            AppNotificationStatus::Processing->value => 'Processing',
+                            AppNotificationStatus::Completed->value => 'Completed',
+                            AppNotificationStatus::Failed->value => 'Failed',
                         ])
-                        ->default('pending')
+                        ->default(AppNotificationStatus::Pending->value)
                         ->disabled()
-                        ->dehydrated(false), // Handled by background jobs
+                        ->dehydrated(false),
 
                     DateTimePicker::make('scheduled_at')
                         ->label('Schedule Date & Time')
