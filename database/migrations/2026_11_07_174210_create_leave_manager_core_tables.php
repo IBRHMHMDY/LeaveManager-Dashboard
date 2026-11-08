@@ -35,8 +35,9 @@ return new class extends Migration
         Schema::create('holidays', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('date')->unique();
-            $table->boolean('is_active')->default(true)->index();
+            $table->date('start_date')->index();
+            $table->date('end_date')->index();
+            $table->unsignedInteger('days_count')->default(1);
             $table->timestamps();
         });
 

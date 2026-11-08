@@ -12,15 +12,28 @@ class Holiday extends Model
 {
     protected $fillable = [
         'name',
-        'date',
-        'is_active',
+        'start_date',
+        'end_date',
+        'days_count',
     ];
 
     protected function casts(): array
     {
         return [
-            'date' => 'date',
-            'is_active' => 'boolean',
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'days_count' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        // حساب عدد الأيام تلقائياً قبل الحفظ في قاعدة البيانات
+        static::saving(function (Holiday $holiday) {
+            if ($holiday->start_date && $holiday->end_date) {
+                // نضيف 1 لاحتساب يوم البداية ضمن الإجازة (مثال: نفس اليوم = يوم واحد)
+                $holiday->days_count = $holiday->start_date->diffInDays($holiday->end_date) + 1;
+            }
+        });
     }
 }

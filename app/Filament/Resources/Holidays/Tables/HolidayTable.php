@@ -1,46 +1,54 @@
 <?php
-
-// app/Filament/Resources/HolidayResource/Tables/HolidayTable.php
+// app/Filament/Resources/Holidays/Tables/HolidayTable.php
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\HolidayResource\Tables;
+namespace App\Filament\Resources\Holidays\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 final class HolidayTable
 {
-    public static function make(Table $table): Table
+    public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->label('Name')
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Holiday Name')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('date')
-                    ->label('Date')
-                    ->date('Y-m-d')
+                Tables\Columns\TextColumn::make('start_date')
+                    ->label('Start Date')
+                    ->date('M d, Y')
                     ->sortable(),
 
-                IconColumn::make('is_active')
-                    ->label('Active')
-                    ->boolean()
+                Tables\Columns\TextColumn::make('end_date')
+                    ->label('End Date')
+                    ->date('M d, Y')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('days_count')
+                    ->label('Duration (Days)')
+                    ->numeric()
+                    ->sortable()
+                    ->badge(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Active Status'),
+                //
             ])
-            ->actionsRecords([
+            ->actionsRecord([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -49,6 +57,6 @@ final class HolidayTable
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('date', 'asc');
+            ->deferLoading();
     }
 }

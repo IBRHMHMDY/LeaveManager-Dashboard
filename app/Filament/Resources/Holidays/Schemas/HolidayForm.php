@@ -1,43 +1,41 @@
 <?php
-
 // app/Filament/Resources/Holidays/Schemas/HolidayForm.php
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\HolidayResource\Schemas;
+namespace App\Filament\Resources\Holidays\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+
 
 final class HolidayForm
 {
     public static function schema(): array
     {
         return [
-            Section::make('Holiday Details')
-                ->schema([
-                    TextInput::make('name')
-                        ->label('Holiday Name')
-                        ->required()
-                        ->maxLength(255)
-                        ->columnSpanFull(),
+            TextInput::make('name')
+                ->label('Holiday Name')
+                ->required()
+                ->maxLength(255)
+                ->columnSpanFull(),
 
-                    DatePicker::make('date')
-                        ->label('Holiday Date')
-                        ->required()
-                        ->native(false) // Uses better UI picker
-                        ->displayFormat('Y-m-d')
-                        ->format('Y-m-d'),
+            DatePicker::make('start_date')
+                ->label('Start Date')
+                ->required()
+                ->live()
+                ->afterStateUpdated(function (Set $set, $state) {
+                    if ($state) {
+                        $set('end_date', $state);
+                    }
+                }),
 
-                    Toggle::make('is_active')
-                        ->label('Is Active')
-                        ->helperText('If disabled, automated notifications will not be sent for this holiday.')
-                        ->default(true)
-                        ->inline(false),
-                ])
-                ->columns(2),
+            DatePicker::make('end_date')
+                ->label('End Date')
+                ->required()
+                ->minDate(fn (Get $get) => $get('start_date')),
         ];
     }
 }

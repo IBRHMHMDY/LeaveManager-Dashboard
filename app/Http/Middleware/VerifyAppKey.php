@@ -1,5 +1,4 @@
 <?php
-
 // app/Http/Middleware/VerifyAppKey.php
 
 declare(strict_types=1);
@@ -14,14 +13,13 @@ class VerifyAppKey
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $expectedKey = config('mobile.app_key');
-        $providedKey = $request->header('X-App-Key');
-
-        if (empty($expectedKey) || $providedKey !== $expectedKey) {
+        $validAppKey = config('mobile.app_key'); // يتم تعريفها في config/mobile.php وتُقرأ من .env
+        
+        if (! $request->hasHeader('X-App-Key') || $request->header('X-App-Key') !== $validAppKey) {
             return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized. Invalid or missing App Key.',
-            ], Response::HTTP_UNAUTHORIZED);
+                'status' => 'error',
+                'message' => 'Unauthorized: Invalid or missing App Key',
+            ], 401);
         }
 
         return $next($request);
